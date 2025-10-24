@@ -1,0 +1,17 @@
+repository_type: pipeline
+
+nf_core_version: 3.4.1
+
+lint: {}
+
+template:
+  org: nf-core
+  name: bamcmp
+  description: Only to run bamcmp
+  author: Md Imran Khan
+  version: 1.0.0dev
+  force: true
+  outdir: .
+  skip_features:
+    - gpu
+  is_nfcore: true
