@@ -43,16 +43,22 @@ params.fasta = getGenomeAttribute('fasta')
 workflow NFCORE_BAMCMP {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+    samplesheet
 
     main:
+    // Turn CSV (sample,bam_1,bam_2) into tuples for the module
+    bam_pairs_ch = samplesheet
+        .splitCsv(header: true)
+        .map { row ->
+            if (!row.sample || !row.bam_1 || !row.bam_2)
+                error "CSV must have columns: sample,bam_1,bam_2"
+            tuple([id: row.sample], file(row.bam_1), file(row.bam_2))
+        }
 
-    //
-    // WORKFLOW: Run pipeline
-    //
-    BAMCMP (
-        samplesheet
-    )
+    // Run the workflow defined in workflows/bamcmp.nf
+    BAMCMP(bam_pairs_ch)
+
+
     emit:
     multiqc_report = BAMCMP.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
