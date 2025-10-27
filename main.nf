@@ -72,7 +72,7 @@ workflow {
 
     main:
     //
-    // SUBWORKFLOW: Run initialisation tasks
+    // SUBWORKFLOW: Run initialisation tasks (we pass null for the params file slot)
     //
     PIPELINE_INITIALISATION (
         params.version,
@@ -80,7 +80,7 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        null,
+        null,              // <- important: do NOT pass the CSV here
         params.help,
         params.help_full,
         params.show_hidden
@@ -88,10 +88,12 @@ workflow {
 
     //
     // WORKFLOW: Run main workflow
+    // Feed your CSV directly so *you* control parsing
     //
     NFCORE_BAMCMP (
-        PIPELINE_INITIALISATION.out.samplesheet
+        Channel.value( file(params.input) )
     )
+
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -105,6 +107,7 @@ workflow {
         NFCORE_BAMCMP.out.multiqc_report
     )
 }
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
