@@ -1,33 +1,28 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/bamcmp/master/assets/schema_input.json",
-    "title": "nf-core/bamcmp pipeline - params.input schema",
-    "description": "Schema for the file provided with params.input",
-    "type": "array",
-    "items": {
-        "type": "object",
-        "properties": {
-            "sample": {
-                "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["id"]
-            },
-            "fastq_1": {
-                "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
-            },
-            "fastq_2": {
-                "type": "string",
-                "format": "file-path",
-                "exists": true,
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
-            }
-        },
-        "required": ["sample", "fastq_1"]
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BAM pairs input schema",
+  "description": "Samplesheet describing pairs of BAM files.",
+  "type": "object",
+  "properties": {
+    "sample": {
+      "type": "string",
+      "description": "Sample name / ID"
+    },
+    "bam_1": {
+      "type": "string",
+      "format": "file-path",
+      "exists": true,
+      "pattern": "^\\S+\\.(bam|cram)$",
+      "description": "Path to the primary BAM file"
+    },
+    "bam_2": {
+      "type": "string",
+      "format": "file-path",
+      "exists": true,
+      "pattern": "^\\S+\\.(bam|cram)$",
+      "description": "Path to the contaminant BAM file"
     }
+  },
+  "required": ["sample", "bam_1", "bam_2"],
+  "additionalProperties": false
 }
